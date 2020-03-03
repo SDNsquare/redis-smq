@@ -68,7 +68,7 @@ declare module 'redis-smq' {
 
     public constructor(config?: RedisSMQConfig, options?: ConsumerConfig);
     public run(): void;
-    protected consume(message: Message, cb: (err?: Error) => void): void;
+    protected consume(message: any, cb: (err?: Error) => void): void;
     public shutdown(): void;
     public isRunning(): boolean;
   }
