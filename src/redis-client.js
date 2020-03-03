@@ -23,7 +23,7 @@ module.exports = {
     const client = driver === 'ioredis' ? new IORedis(driverOptions) : redis.createClient(driverOptions);
     client.on('connect', () => {
       if (redisParams.options.password) {
-        client.auth(config.password, err => {
+        client.auth(redisParams.options.password, err => {
           if (!err)
             client.on('ready', () => {
               clients.push(client);
