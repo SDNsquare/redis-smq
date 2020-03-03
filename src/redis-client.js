@@ -21,17 +21,21 @@ module.exports = {
       if (redisParams.options) driverOptions = redisParams.options;
     } else driverOptions = redisParams;
     const client = driver === 'ioredis' ? new IORedis(driverOptions) : redis.createClient(driverOptions);
-    client.on('ready', () => {
-      clients.push(client);
+    client.on('connect', () => {
       if (redisParams.options.password) {
-        client.on('connect', () => {
-          client.auth(config.password, err => {
-            if (!err) cb(client);
-            else throw err;
-          });
+        client.auth(config.password, err => {
+          if (!err)
+            client.on('ready', () => {
+              clients.push(client);
+              cb(client);
+            });
+          else throw err;
         });
       } else {
-        cb(client);
+        client.on('ready', () => {
+          clients.push(client);
+          cb(client);
+        });
       }
     });
   },
