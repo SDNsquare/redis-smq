@@ -23,6 +23,10 @@ class Consumer extends Instance {
     /* eslint class-methods-use-this: 0 */
     throw new Error('Consume method should be extended');
   }
+
+  getQueueName() {
+    return this.dispatcher.getQueueName();
+  }
 }
 
 module.exports = Consumer;
