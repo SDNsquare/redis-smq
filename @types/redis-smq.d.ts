@@ -66,6 +66,8 @@ declare module 'redis-smq' {
     public messageRetryDelay?: number;
     public isTest: boolean;
 
+    public getQueueName(): string;
+
     public constructor(queuName: string, config?: RedisSMQConfig, options?: ConsumerConfig);
     public run(): void;
     protected consume(message: any, cb: (err?: Error) => void): void;

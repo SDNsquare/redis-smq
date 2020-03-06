@@ -407,6 +407,8 @@ module.exports = function dispatcher() {
       queueName = queu;
       instance = inst;
 
+      instance.queueName = queueName;
+
       config = cfg;
       instance.config = config;
 
