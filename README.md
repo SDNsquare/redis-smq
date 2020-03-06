@@ -6,27 +6,26 @@ For more details about RedisSMQ design see [https://medium.com/@weyoss/building-
 
 ## Features
 
- * **Persistent**: No messages are lost in case of a consumer failure.
- * **Atomic**: A message is delivered only once to one consumer (in FIFO order) so you would never fall into a situation
- where a message could be processed more than once.
- * **Fast**: 13K+ messages/second on a virtual machine of 4 CPU cores and 8GB RAM and running one consumer.
- * **Scalable**: A queue can be consumed by many concurrent consumers, running on the same or on different hosts.
- * **Message expiration**: A message will expire and not be consumed if it has been in the queue for longer than the 
- TTL (time-to-live).
- * **Message consume timeout**: The amount of time for a consumer to consume a message. If the timeout exceeds,
- message processing is cancelled and the message is re-queued to be consumed again.
- * **Delaying and scheduling message delivery**: From version 1.0.19 a persistent scheduler has been built into 
- RedisSMQ message queue. The scheduler accepts delaying messages, repeated messages delivery, period
- between repeats and CRON expressions.
- * **Highly optimized**: No promises, no async/await, small memory footprint, no memory leaks.
- * **Monitorable**: Statistics (input/processing/acks/unacks messages rates, online consumers, queues, etc.)
-   are provided in real-time.
- * **Logging**: Supports JSON log format for troubleshooting and analytics purposes.
- * **Configurable**: Many options and features can be configured.  
- * **Supports both redis & ioredis**: Starting from v1.1.0 RedisSMQ can be configured to use either `redis` or `ioredis` 
- to connect to Redis server.  
+- **Persistent**: No messages are lost in case of a consumer failure.
+- **Atomic**: A message is delivered only once to one consumer (in FIFO order) so you would never fall into a situation
+  where a message could be processed more than once.
+- **Fast**: 13K+ messages/second on a virtual machine of 4 CPU cores and 8GB RAM and running one consumer.
+- **Scalable**: A queue can be consumed by many concurrent consumers, running on the same or on different hosts.
+- **Message expiration**: A message will expire and not be consumed if it has been in the queue for longer than the
+  TTL (time-to-live).
+- **Message consume timeout**: The amount of time for a consumer to consume a message. If the timeout exceeds,
+  message processing is cancelled and the message is re-queued to be consumed again.
+- **Delaying and scheduling message delivery**: From version 1.0.19 a persistent scheduler has been built into
+  RedisSMQ message queue. The scheduler accepts delaying messages, repeated messages delivery, period
+  between repeats and CRON expressions.
+- **Highly optimized**: No promises, no async/await, small memory footprint, no memory leaks.
+- **Monitorable**: Statistics (input/processing/acks/unacks messages rates, online consumers, queues, etc.)
+  are provided in real-time.
+- **Logging**: Supports JSON log format for troubleshooting and analytics purposes.
+- **Configurable**: Many options and features can be configured.
+- **Supports both redis & ioredis**: Starting from v1.1.0 RedisSMQ can be configured to use either `redis` or `ioredis`
+  to connect to Redis server.
 
- 
 ## Installation
 
 ```text
@@ -35,14 +34,13 @@ npm install redis-smq --save
 
 Considerations:
 
-- Minimal Node.js version support is 7.0.0 (with --harmony flag), 7.6.0 (without --harmony flag). The latest stable 
+- Minimal Node.js version support is 7.0.0 (with --harmony flag), 7.6.0 (without --harmony flag). The latest stable
   Node.js version is recommended.
 - Minimal Redis server version is 2.6.12.
 
-
 # Configuration
 
-Before running a Producer or a Consumer instance, an object containing the configuration parameters can be supplied 
+Before running a Producer or a Consumer instance, an object containing the configuration parameters can be supplied
 to the class constructor in order to configure the message queue.
 
 A configuration object may look like:
@@ -53,16 +51,16 @@ A configuration object may look like:
 const path = require('path');
 
 module.exports = {
-    namespace: 'my_project_name',
-    redis: {
-        driver: 'redis',
-        options: {
-            host: '127.0.0.1',
-            port: 6379,
-            connect_timeout: 3600000,
-        },
-    },
-    /*
+  namespace: 'my_project_name',
+  redis: {
+    driver: 'redis',
+    options: {
+      host: '127.0.0.1',
+      port: 6379,
+      connect_timeout: 3600000
+    }
+  },
+  /*
     // for old syntax bellow, the redis driver is used by default
     redis: {
         host: '127.0.0.1',
@@ -70,62 +68,63 @@ module.exports = {
         connect_timeout: 3600000,
     },
     */
-    log: {
-        enabled: 0,
-        options: {
-            level: 'trace',
-            /*
+  log: {
+    enabled: 0,
+    options: {
+      level: 'trace'
+      /*
             streams: [
                 {
                     path: path.normalize(`${__dirname}/../logs/redis-smq.log`)
                 },
             ],
             */
-        },
-    },
-    monitor: {
-        enabled: true,
-        host: '127.0.0.1',
-        port: 3000,
-    },
+    }
+  },
+  monitor: {
+    enabled: true,
+    host: '127.0.0.1',
+    port: 3000
+  }
 };
 ```
 
 **Parameters**
 
-- `namespace` *(String): Optional.* The namespace for message queues. It can be composed only of letters (a-z), 
-  numbers (0-9) and (-_) characters. Namespace can be for example configured per project. 
+- `namespace` _(String): Optional._ The namespace for message queues. It can be composed only of letters (a-z),
+  numbers (0-9) and (-\_) characters. Namespace can be for example configured per project.
 
-- `redis` *(Object): Optional.* Redis client parameters. If used without `redis.driver` and `redis.options`, for 
-backward compatibility, this parameter would be considered as holding `redis` driver options and therefor the `redis`
-driver would be used by default.
+- `redis` _(Object): Optional._ Redis client parameters. If used without `redis.driver` and `redis.options`, for
+  backward compatibility, this parameter would be considered as holding `redis` driver options and therefor the `redis`
+  driver would be used by default.
 
-- `redis.driver` *(String): Optional.* Redis driver name. Can be either `redis` or `ioredis`.
+- `redis.driver` _(String): Optional._ Redis driver name. Can be either `redis` or `ioredis`.
 
-- `redis.options` *(Object): Optional.* Redis driver options.
-   - See https://github.com/NodeRedis/node_redis#options-object-properties for all valid parameters for `redis` driver.
-   - See https://github.com/luin/ioredis/blob/master/API.md#new_Redis for all valid `ioredis` parameters.
+- `redis.options` _(Object): Optional._ Redis driver options.
 
-- `log` *(Object): Optional.* Logging parameters.
+  - See https://github.com/NodeRedis/node_redis#options-object-properties for all valid parameters for `redis` driver.
+  - See https://github.com/luin/ioredis/blob/master/API.md#new_Redis for all valid `ioredis` parameters.
 
-- `log.enabled` *(Integer/Boolean): Optional.* Enable/disable logging. By default logging is disabled.
+- `log` _(Object): Optional._ Logging parameters.
 
-- `log.options` *(Object): Optional.* All valid Bunyan configuration options are accepted. Please look at the 
+- `log.enabled` _(Integer/Boolean): Optional._ Enable/disable logging. By default logging is disabled.
+
+- `log.options` _(Object): Optional._ All valid Bunyan configuration options are accepted. Please look at the
   [Bunyan Repository](https://github.com/trentm/node-bunyan) for more details.
 
-- `monitor` *(Object): Optional.* RedisSMQ monitor parameters.
+- `monitor` _(Object): Optional._ RedisSMQ monitor parameters.
 
-- `monitor.enabled` *(Boolean/Integer): Optional.* Enable/Disable the monitor. By default disabled.
+- `monitor.enabled` _(Boolean/Integer): Optional._ Enable/Disable the monitor. By default disabled.
 
-- `monitor.host` *(String): Optional.* IP address of the monitor server. By default `0.0.0.0`.
+- `monitor.host` _(String): Optional._ IP address of the monitor server. By default `0.0.0.0`.
 
-- `monitor.port` *(Integer): Optional.* Port of the monitor server. By default `7210`.
+- `monitor.port` _(Integer): Optional._ Port of the monitor server. By default `7210`.
 
 ## Usage
 
 ## Overview
 
-RedisSMQ provides 3 classes: Message, Producer and Consumer in order to work with the message queue. 
+RedisSMQ provides 3 classes: Message, Producer and Consumer in order to work with the message queue.
 
 ### Message Class
 
@@ -133,31 +132,29 @@ Message class is the main component responsible for creating and handling messag
 the required methods needed to construct and deal with messages.
 
 ```javascript
-
 const { Message } = require('redis-smq');
 
 const message = new Message();
 
 message
-    .setBody({hello: 'world'})
-    .setTTL(3600000)
-    .setScheduledDelay(10)
-    .setScheduledRepeat(6)
-    .setScheduledPeriod(60)
-    .setScheduledCron('* 30 * * * *');
+  .setBody({ hello: 'world' })
+  .setTTL(3600000)
+  .setScheduledDelay(10)
+  .setScheduledRepeat(6)
+  .setScheduledPeriod(60)
+  .setScheduledCron('* 30 * * * *');
 
 let messageTTL = message.getTTL();
 
-// same as 
+// same as
 messageTTL = message.getProperty(Message.PROPERTY_TTL);
 ```
 
 See [Message API Reference](docs/api/message.md) for more details.
 
-
 ### Producer Class
 
-Producer class is in turn responsible for producing messages. 
+Producer class is in turn responsible for producing messages.
 
 Each producer instance has an associated message queue and provides `produceMessage()` method which handle the
 message and decides to either send it to the message queue scheduler or to immediately enqueue it for delivery.
@@ -171,14 +168,14 @@ const { Message, Producer } = require('redis-smq');
 const message = new Message();
 
 message
-    .setBody({hello: 'world'})
-    .setTTL(3600000)
-    .setScheduledDelay(10);
+  .setBody({ hello: 'world' })
+  .setTTL(3600000)
+  .setScheduledDelay(10);
 
 const producer = new Producer('test_queue');
-producer.produceMessage(message, (err) => {
-   if (err) console.log(err);
-   else console.log('Successfully produced')
+producer.produceMessage(message, err => {
+  if (err) console.log(err);
+  else console.log('Successfully produced');
 });
 ```
 
@@ -203,34 +200,32 @@ const redisSMQ = require('redis-smq');
 const Consumer = redisSMQ.Consumer;
 
 class TestQueueConsumer extends Consumer {
-    /**
-     *
-     * @param message
-     * @param cb
-     */
-    consume(message, cb) {
-        //  console.log('Got a message to consume:', message);
-        //  
-        //  throw new Error('TEST!');
-        //  
-        //  cb(new Error('TEST!'));
-        //  
-        //  const timeout = parseInt(Math.random() * 100);
-        //  setTimeout(() => {
-        //      cb();
-        //  }, timeout);
-        cb();
-    }
+  /**
+   *
+   * @param message
+   * @param cb
+   */
+  consume(message, cb) {
+    //  console.log('Got a message to consume:', message);
+    //
+    //  throw new Error('TEST!');
+    //
+    //  cb(new Error('TEST!'));
+    //
+    //  const timeout = parseInt(Math.random() * 100);
+    //  setTimeout(() => {
+    //      cb();
+    //  }, timeout);
+    cb();
+  }
 }
 
-TestQueueConsumer.queueName = 'test_queue';
-
-const consumer = new TestQueueConsumer();
+const consumer = new TestQueueConsumer('test_queue');
 consumer.run();
 ```
 
-To start consuming messages, a consumer needs first to be launched from CLI to connect to the Redis server 
-and wait for messages: 
+To start consuming messages, a consumer needs first to be launched from CLI to connect to the Redis server
+and wait for messages:
 
 ```text
 $ node ./example/test-queue-consumer.js
@@ -251,7 +246,7 @@ See [Consumer API Reference](docs/api/consumer.md) for more details.
 ## Performance
 
 One key indicator about how RedisSMQ is fast and performant is Message throughput. Message throughput is the number of
-messages per second that the message queue can process. 
+messages per second that the message queue can process.
 
 ### Scenarios
 
@@ -263,11 +258,10 @@ We can measure the Producer throughput and the Consumer throughput. The benchmar
 
 In all scenarios messages are produced and consumed as fast as possible.
 
-
 ### Environment
 
-The benchmark was performed on a KVM virtual machine (4 CPU cores, 8GB RAM) hosted on a desktop computer 
-(CPU AMD FX8350, RAM 32GB) running Debian 8. 
+The benchmark was performed on a KVM virtual machine (4 CPU cores, 8GB RAM) hosted on a desktop computer
+(CPU AMD FX8350, RAM 32GB) running Debian 8.
 
 No performance tuning was performed for the VM, neither for Redis server. Default parameters were used out of box.
 
@@ -277,8 +271,8 @@ All consumers, producers, monitor and redis server are launched from the same ho
 
 ### Results
 
-| Scenario                                             | Producer rate (msg/sec) | Consumer rate (msg/sec) |
-|-----------------------------------------------------|-------------------------|-------------------------|
+| Scenario                                            | Producer rate (msg/sec) | Consumer rate (msg/sec) |
+| --------------------------------------------------- | ----------------------- | ----------------------- |
 | Run 1 producer instance                             | 23K+                    | 0                       |
 | Run 10 producer instances                           | 96K+                    | 0                       |
 | Run 1 consumer instance                             | 0                       | 13K+                    |
@@ -293,10 +287,10 @@ All consumers, producers, monitor and redis server are launched from the same ho
 
 This package is using JSON log format, thanks to [Bunyan](https://github.com/trentm/node-bunyan).
 
-The structured data format of JSON allows analytics tools to take place but also helps to monitor and troubleshoot 
+The structured data format of JSON allows analytics tools to take place but also helps to monitor and troubleshoot
 issues easier and faster.
 
-By default all logs are disabled. Logging can affect performance (due to I/O operations). When enabled you can 
+By default all logs are disabled. Logging can affect performance (due to I/O operations). When enabled you can
 use bunyan utility to pretty format the output.
 
 Unless configured otherwise, the standard output is the console which launched the consumer.
@@ -304,9 +298,10 @@ Unless configured otherwise, the standard output is the console which launched t
 ```text
 $ node consumer | ./node_modules/.bin/bunyan
 ```
+
 ### Monitoring
 
-The RedisSMQ Monitor is an interface which let you monitor and debug your RedisSMQ server from a web browser in 
+The RedisSMQ Monitor is an interface which let you monitor and debug your RedisSMQ server from a web browser in
 real-time.
 
 Starting from version v1.1.0, RedisSMQ Monitor has split up into a standalone project and was packaged under
@@ -322,9 +317,10 @@ const config = require('./config');
 const { monitor } = require('redis-smq');
 
 monitor(config).listen(() => {
-    console.log('It works!')
+  console.log('It works!');
 });
 ```
+
 ## Contributing
 
 So you are interested in contributing to this project? Please see [CONTRIBUTING.md](https://github.com/weyoss/guidelines/blob/master/CONTRIBUTIONS.md).

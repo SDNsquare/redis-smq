@@ -9,7 +9,7 @@ class Consumer extends Instance {
    * @param {object} config
    * @param {object} options
    */
-  constructor(config = {}, options = {}, queueName) {
+  constructor(queueName, config = {}, options = {}) {
     super();
     this.dispatcher.bootstrapConsumer(this, config, options, queueName);
   }
