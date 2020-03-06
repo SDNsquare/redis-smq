@@ -57,7 +57,7 @@ declare module 'redis-smq' {
 
   export class Consumer {
     public id: string;
-    public static queueName: string;
+    public queueName: string;
     public config: RedisSMQConfig;
     public options: ConsumerConfig;
     public messageConsumeTimeout?: number;
@@ -66,7 +66,7 @@ declare module 'redis-smq' {
     public messageRetryDelay?: number;
     public isTest: boolean;
 
-    public constructor(config?: RedisSMQConfig, options?: ConsumerConfig);
+    public constructor(queuName: string, config?: RedisSMQConfig, options?: ConsumerConfig);
     public run(): void;
     protected consume(message: any, cb: (err?: Error) => void): void;
     public shutdown(): void;
